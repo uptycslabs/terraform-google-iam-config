@@ -33,7 +33,7 @@ module "create-gcp-cred" {
   source                    = "github.com/uptycslabs/terraform-google-iam-config"
   gcp_region                = "us-east1"
   gcp_project_id            = "test-project"
-  gcp_project_number        = "1234567899"
+  gcp_project_number        = "1234567890"
   is_service_account_exists = false
   service_account_name      = "sa-for-cldquery"
 
