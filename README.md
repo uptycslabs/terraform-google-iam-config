@@ -2,7 +2,7 @@
 
 This module allows you to create GCP credential config in Google Cloud Platform projects which will be used get GCP data from AWS environment.
 
-This terraforms module will create below resources:-
+This terraform module will create below resources:-
  * It creates service account, work pool identity and add cloud provider to it.
  * It will attach below policies to service account
      * roles/iam.securityReviewer
@@ -10,23 +10,37 @@ This terraforms module will create below resources:-
      * roles/pubsub.subscriber
      * roles/viewer
 
-# Compatibility
+# Requirements
+
+These sections describe requirements for using this module.
+The following dependencies must be available:
+
+## 1. User & IAM
+
+* The user account should have access to the GCP project for perform operation.
+* Service account or user credentials with the following privileged roles must be used to provision the resources of this module:
+
+   * Service Account Admin
+   * IAM Workload Identity Pool Admin
+   * Project IAM Admin
+
+## 2. Install terraform
 
 This module is meant for use with Terraform version = "~> 3.61.0".
 
-# Usage
+## 3. Install Google Cloud SDK 
 
-## 1. Install terraform
+## 4. Authenticate
 
-
-## 2. Authenticate
 ```
 Login with ADC
+  - (Optional) "gcloud config configurations create < config name>" 
   - "gcloud auth application-default login"
+  - "gcloud config set project < project Id >" # If user has multiple projects 
 ```
 
+## 5. Use terraform module steps
 
-## 3. Use terraform module steps
   * Create a <filename>.tf file, paste below codes and modify as needed.
 ```
 module "create-gcp-cred" {
@@ -91,7 +105,7 @@ output "command-to-generate-gcp-cred-config" {
 3. `credentials.json` is only created once. To re create the file use command returned by `command-to-generate-gcp-cred-config` output.
 
 
-## 4.Execute Terraform script to get credentials JSON
+## 6.Execute Terraform script to get credentials JSON
 ```
 $ terraform init
 $ terraform plan
