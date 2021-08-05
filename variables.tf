@@ -40,7 +40,7 @@ variable "gcp_wip_provider_id" {
 }
 
 variable "host_aws_account_id" {
-  type        = number
+  type        = string
   description = "The deployer host AWS account ID."
   default     = "11111111111111"
 }
