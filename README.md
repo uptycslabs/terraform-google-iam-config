@@ -108,12 +108,12 @@ output "command-to-generate-gcp-cred-config" {
      - Soft-deleted provider can be restored using `UndeleteWorkloadIdentityPoolProvider`. ID cannot be re-used until the WIP is permanently deleted.
      - After `terraform destroy`, same WIP can't be created again. Modify `gcp_workload_identity` value if required.
 
-3. `credentials.json` is only created once. To re create the file use command returned by `command-to-generate-gcp-cred-config` output.
+3. `credentials.json` is created once. Use the command returned by `command-to-generate-gcp-cred-config` output to recreate.
 
 
 ## 6.Execute Terraform script to get credentials JSON
 ```
 $ terraform init
 $ terraform plan
-$ terraform apply # NOTE: Once terraform successfully applied, it will create "credentials.json" file.
+$ terraform apply # NOTE: Once terraform is successfully applied, it will create "credentials.json" file.
 ```
