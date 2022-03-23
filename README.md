@@ -57,7 +57,7 @@ module "create-gcp-cred" {
 
   # AWS account details
   # Copy Uptycs's AWS Account ID and Role from Uptycs' UI.
-  # Follow this path "Cloud"->"GCP"->"Integrations"->"PROJECT INTEGRATION"
+  # Uptycs' UI: "Cloud"->"GCP"->"Integrations"->"PROJECT INTEGRATION"
   host_aws_account_id     = "<AWS account id>"
   host_aws_instance_role  = "<AWS role>"
 
