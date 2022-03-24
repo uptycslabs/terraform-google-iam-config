@@ -1,9 +1,13 @@
 # Terraform GCP IAM module
 
-This module allows you to create GCP credential config in Google Cloud Platform projects which will be used get GCP data from AWS environment.
+This module would help create access credentials to be used with GCP Project integration with Uptycs.
+Access is setup with Workload Identity Pool (WIP) where AWS is the identity provider.
+This avoids sharing sensitive keys.
 
-This terraform module will create below resources:-
- * It creates service account, work pool identity and add cloud provider to it.
+This terraform module will create following resources:-
+ * Service account
+ * Workload Identity Pool
+ * Identity Provider AWS
  * It will attach below policies to service account
      * roles/iam.securityReviewer
      * roles/bigquery.resourceViewer
@@ -17,16 +21,13 @@ The following dependencies must be available:
 
 ## 1. User & IAM
 
-* The user account should have access to the GCP project for perform operation.
-* Service account or user credentials with the following privileged roles must be used to provision the resources of this module:
+* The principal executing the TF should have following permissions
 
    * Service Account Admin
    * IAM Workload Identity Pool Admin
    * Project IAM Admin
 
 ## 2. Install terraform
-
-This module is meant for use with Terraform version = "~> 3.61.0".
 
 ## 3. Install Google Cloud SDK 
 
@@ -45,19 +46,24 @@ Login with ADC
 ```
 module "create-gcp-cred" {
   source                    = "github.com/uptycslabs/terraform-google-iam-config"
+
+  # Modify Project details reequired
   gcp_region                = "us-east1"
-  gcp_project_id            = "test-project"
-  gcp_project_number        = "1234567890"
+  gcp_project_id            = "<GCP-project-id>"
+  gcp_project_number        = "<GCP-project-number>"
+
   is_service_account_exists = false
-  service_account_name      = "sa-for-cldquery"
+  service_account_name      = "sa-for-uptycs"
 
   # AWS account details
-  host_aws_account_id     = "< AWS account id >"
-  host_aws_instance_role  = "< AWS role >"
+  # Copy Uptycs's AWS Account ID and Role from Uptycs' UI.
+  # Uptycs' UI: "Cloud"->"GCP"->"Integrations"->"PROJECT INTEGRATION"
+  host_aws_account_id     = "<AWS account id>"
+  host_aws_instance_role  = "<AWS role>"
 
   # Modify if required
   gcp_workload_identity = "wip-uptycs"
-  gcp_wip_provider_id   = "aws-id-provider-test"
+  gcp_wip_provider_id   = "uptycs-aws-idp"
 }
 
 output "service-account-email" {
@@ -71,17 +77,17 @@ output "command-to-generate-gcp-cred-config" {
 
 ## Inputs
 
-| Name                      | Description                                                                                                        | Type          | Default          |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------- | ---------------- |
-| gcp_region                | The GCP project region where planning to create resources.                                                         | `string`      | `us-east-1`      |
-| gcp_project_id            | The GCP project id where you wants create resources.                                                               | `string`      | `""`             |
-| gcp_project_number        | The GCP project number of above passed project id.                                                                 | `number`      | `""`             |
-| is_service_account_exists | This is set true or false i.e. whether you wants to use existing/new service account .                             | `bool`        | `false`          |
-| service_account_name      | The GCP service account name , if service account is already exists then pass existing service account name else pass new name| `string` | `"sa-for-test"` |
-| host_aws_account_id       | The deployer host aws account id.                                                                                  | `number`      | `""`             |
-| host_aws_instance_role    | The attached deployer host aws role name.                                                                          | `string`      | `""`             |
-| gcp_workload_identity     | Workload Identity Pool to allow Uptycs integration via AWS federation                                              | `string`      | `""`             |
-| gcp_wip_provider_id       | Workload Identity Pool provider id allow to add cloud provider                                                     | `string`      | `""`             |
+| Name                      | Description                                                                                                        | Type          | Required | Default          |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------- | -------- | ---------------- |
+| gcp_region                | The GCP project region where planning to create resources.                                                         | `string`      |          |`us-east-1`      |
+| gcp_project_id            | The GCP project id where you wants create resources.                                                               | `string`      | Yes      |                 |
+| gcp_project_number        | The GCP project number of above passed project id.                                                                 | `number`      | Yes      |              |
+| is_service_account_exists | Set this to false                                                                                                  | `bool`        |          | `false`          |
+| service_account_name      | The GCP service account name                                                                                       | `string`      |          | `"sa-for-uptycs"` |
+| host_aws_account_id       | Uptycs's AWS Account ID. Copy from Uptycs's GCP Integration Screen UI                                              | `number`      | Yes      |              |
+| host_aws_instance_role    | Uptycs's AWS Role name. Copy from Uptycs's GCP Integration Screen UI                                               | `string`      | Yes      |              |
+| gcp_workload_identity     | Workload Identity Pool to allow Uptycs integration via AWS federation                                              | `string`      |          | `"wip-uptycs"`             |
+| gcp_wip_provider_id       | Workload Identity Pool provider id allow to add cloud provider                                                     | `string`      |          | `"uptycs-aws-idp"`             |
 
 
 ## Outputs
@@ -102,12 +108,12 @@ output "command-to-generate-gcp-cred-config" {
      - Soft-deleted provider can be restored using `UndeleteWorkloadIdentityPoolProvider`. ID cannot be re-used until the WIP is permanently deleted.
      - After `terraform destroy`, same WIP can't be created again. Modify `gcp_workload_identity` value if required.
 
-3. `credentials.json` is only created once. To re create the file use command returned by `command-to-generate-gcp-cred-config` output.
+3. `credentials.json` is created once. Use the command returned by `command-to-generate-gcp-cred-config` output to recreate.
 
 
 ## 6.Execute Terraform script to get credentials JSON
 ```
 $ terraform init
 $ terraform plan
-$ terraform apply # NOTE: Once terraform successfully applied, it will create "credentials.json" file.
+$ terraform apply # NOTE: Once terraform is successfully applied, it will create "credentials.json" file.
 ```
