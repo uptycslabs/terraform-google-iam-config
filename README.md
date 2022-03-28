@@ -80,7 +80,7 @@ output "command-to-generate-gcp-cred-config" {
 | Name                      | Description                                                                                                        | Type          | Required | Default          |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------- | -------- | ---------------- |
 | gcp_region                | The GCP project region where planning to create resources.                                                         | `string`      |          |`us-east-1`      |
-| gcp_project_id            | The GCP project id where you wants create resources.                                                               | `string`      | Yes      |                 |
+| gcp_project_id            | The GCP project id where you want to create resources.                                                             | `string`      | Yes      |                 |
 | gcp_project_number        | The GCP project number of above passed project id.                                                                 | `number`      | Yes      |              |
 | is_service_account_exists | Set this to false                                                                                                  | `bool`        |          | `false`          |
 | service_account_name      | The GCP service account name                                                                                       | `string`      |          | `"sa-for-uptycs"` |
