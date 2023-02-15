@@ -115,7 +115,7 @@ output "command-to-generate-gcp-cred-config" {
 ## 6.Execute Terraform script to get credentials JSON
 
 ```
-$ terraform init
+$ terraform init -upgrade
 $ terraform plan
 $ terraform apply # NOTE: Once terraform is successfully applied, it will create "credentials.json" file.
 ```
