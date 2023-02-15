@@ -83,7 +83,7 @@ output "command-to-generate-gcp-cred-config" {
 | service_account_exists | Set this to true if you want to use existing service account.Else set to false | `bool`         |          | `false`                 |
 | service_account_name      | The GCP service account name                                                   | `string`       |          | `"sa-for-uptycs"`       |
 | host_aws_account_id       | Uptycs's AWS Account ID. Copy from Uptycs's GCP Integration Screen UI          | `string`       | Yes      |                         |
-| host_aws_instance_role    | AWS role names of Uptycs - for identity binding                                | `list(string)` | Yes      |                         |
+| host_aws_instance_roles    | AWS role names of Uptycs - for identity binding                                | `list(string)` | Yes      |                         |
 | integration_name          | Unique phrase used to name the resources                                       | `string`       |          | `"uptycs-int-20220101"` |
 
 ## Outputs
