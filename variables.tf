@@ -4,7 +4,7 @@ variable "gcp_project_id" {
 }
 
 
-variable "is_service_account_exists" {
+variable "service_account_exists" {
   type        = bool
   description = "Set true if service account is already exists . "
   default     = false

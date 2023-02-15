@@ -1,7 +1,7 @@
 module "create-gcp-cred" {
   source                    = "github.com/uptycslabs/terraform-google-iam-config"
   gcp_project_id            = "test-project"
-  is_service_account_exists = false
+  service_account_exists    = false
   service_account_name      = "sa-for-testing"
 
   # AWS account details

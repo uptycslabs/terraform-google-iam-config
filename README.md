@@ -52,7 +52,7 @@ module "create-gcp-cred" {
   # Modify Project details reequired
   gcp_project_id            = "<GCP-project-id>"
 
-  is_service_account_exists = false
+  service_account_exists = false
   service_account_name      = "sa-for-uptycs"
 
   # AWS account details
@@ -80,7 +80,7 @@ output "command-to-generate-gcp-cred-config" {
 | Name                      | Description                                                                    | Type           | Required | Default                 |
 | --------------------------- | -------------------------------------------------------------------------------- | ---------------- | ---------- | ------------------------- |
 | gcp_project_id            | The GCP project id where you want to create resources.                         | `string`       | Yes      |                         |
-| is_service_account_exists | Set this to true if you want to use existing service account.Else set to false | `bool`         |          | `false`                 |
+| service_account_exists | Set this to true if you want to use existing service account.Else set to false | `bool`         |          | `false`                 |
 | service_account_name      | The GCP service account name                                                   | `string`       |          | `"sa-for-uptycs"`       |
 | host_aws_account_id       | Uptycs's AWS Account ID. Copy from Uptycs's GCP Integration Screen UI          | `string`       | Yes      |                         |
 | host_aws_instance_role    | AWS role names of Uptycs - for identity binding                                | `list(string)` | Yes      |                         |
@@ -98,8 +98,8 @@ output "command-to-generate-gcp-cred-config" {
 
 1. service account details
 
-   - Set `is_service_account_exists = true`, if service account already exists. Specify existing service account name using `service_account_name`.
-   - Set `is_service_account_exists = false` if service account does not exist. Provide a new name via `service_account_name`.
+   - Set `service_account_exists = true`, if service account already exists. Specify existing service account name using `service_account_name`.
+   - Set `service_account_exists = false` if service account does not exist. Provide a new name via `service_account_name`.
 2. Workload Identity Pool is soft-deleted and permanently deleted after approximately 30 days.
 
    - Soft-deleted provider can be restored using `UndeleteWorkloadIdentityPoolProvider`.  `integration_name` cannot be re-used until the WIP is permanently deleted.
