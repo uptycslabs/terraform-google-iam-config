@@ -58,9 +58,7 @@ resource "google_project_iam_member" "bind_viewer" {
 resource "google_service_account_iam_binding" "workload_identity_binding" {
   service_account_id = var.is_service_account_exists == false ? "${google_service_account.sa_for_cloudquery[0].name}" : "${data.google_service_account.myaccount[0].name}"
   role               = "roles/iam.workloadIdentityUser"
-  members = [
-    "principalSet://iam.googleapis.com/projects/${var.gcp_project_number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.create_wip.workload_identity_pool_id}/attribute.aws_role/arn:aws:sts::${var.host_aws_account_id}:assumed-role/${var.host_aws_instance_role}"
-  ]
+  members = [for each in var.host_aws_instance_role : format("principalSet://iam.googleapis.com/projects/%s/locations/global/workloadIdentityPools/%s/attribute.aws_role/arn:aws:sts::%s:assumed-role/%s", var.gcp_project_number,google_iam_workload_identity_pool.create_wip.workload_identity_pool_id,var.host_aws_account_id, each)]
 }
 
 resource "null_resource" "cred_config_json" {

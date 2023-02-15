@@ -11,7 +11,7 @@ variable "gcp_project_id" {
 }
 
 variable "gcp_project_number" {
-  type        = number
+  type        = string
   description = "The GCP project number"
 }
 
@@ -46,7 +46,6 @@ variable "host_aws_account_id" {
 }
 
 variable "host_aws_instance_role" {
-  type        = string
-  description = "The attached deployer host AWS role name."
-  default     = "Test_Role_Allinone"
+  type        = list 
+  description = "AWS role names of Uptycs - for identity binding"
 }
