@@ -1,19 +1,8 @@
-variable "gcp_region" {
-  type        = string
-  description = "The GCP project region where planning to create resources "
-  default     = "us-east1"
-}
-
 variable "gcp_project_id" {
   type        = string
   description = "The GCP project ID where planning to create resources"
-  default     = "test-project"
 }
 
-variable "gcp_project_number" {
-  type        = string
-  description = "The GCP project number"
-}
 
 variable "is_service_account_exists" {
   type        = bool
@@ -27,25 +16,19 @@ variable "service_account_name" {
   default     = "sa-for-test"
 }
 
-variable "gcp_workload_identity" {
+variable "integration_name" {
   type        = string
-  description = "Workload Identity Pool to allow Uptycs integration via AWS federation."
-  default     = "wip-test"
+  description = "Unique phrase used to name the resources"
+  default     = "uptycs-int-20220101"
 }
 
-variable "gcp_wip_provider_id" {
-  type        = string
-  description = "Workload Identity Pool provider ID allow to add cloud provider."
-  default     = "aws-id-provider-test"
-}
 
 variable "host_aws_account_id" {
   type        = string
-  description = "The deployer host AWS account ID."
-  default     = "11111111111111"
+  description = "AWS account ID of Uptycs - for federated identity"
 }
 
-variable "host_aws_instance_role" {
+variable "host_aws_instance_roles" {
   type        = list 
   description = "AWS role names of Uptycs - for identity binding"
 }
