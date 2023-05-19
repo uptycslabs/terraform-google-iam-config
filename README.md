@@ -47,7 +47,7 @@ Login with ADC
 
 ```
 module "create-gcp-cred" {
-  source                    = "github.com/uptycslabs/terraform-google-iam-config"
+  source                    = "uptycslabs/iam-config/google"
 
   # Modify Project details reequired
   gcp_project_id            = "<GCP-project-id>"
