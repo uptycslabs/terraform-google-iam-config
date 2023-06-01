@@ -64,8 +64,6 @@ module "create-gcp-cred" {
   # Modify if required
   integration_name = "uptycs-int-20220101"
 
-  # Only needed if on Windows
-  windows_interpreter = false
 }
 
 output "service-account-email" {
@@ -88,7 +86,6 @@ output "command-to-generate-gcp-cred-config" {
 | host_aws_account_id       | Uptycs's AWS Account ID. Copy from Uptycs's GCP Integration Screen UI          | `string`       | Yes      |                         |
 | host_aws_instance_roles    | AWS role names of Uptycs - for identity binding                                | `list(string)` | Yes      |                         |
 | integration_name          | Unique phrase used to name the resources                                       | `string`       |          | `"uptycs-int-20220101"` |
-| windows_interpreter | Set to true if using Windows PowerShell set to false if using cmd. Ignore if on Linux or Mac | `bool` |             | `false`                 |
 
 ## Outputs
 

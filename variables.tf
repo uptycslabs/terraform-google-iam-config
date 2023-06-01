@@ -10,12 +10,6 @@ variable "service_account_exists" {
   default     = false
 }
 
-variable "windows_interpreter" {
-  type        = bool
-  description = "Set to true if using Windows PowerShell set to false if using cmd. Ignore if on Linux or Mac"
-  default     = false
-}
-
 variable "service_account_name" {
   type        = string
   description = "The GCP service account name, if service account is already exists then pass existing service account name else pass new name."
