@@ -63,7 +63,6 @@ module "create-gcp-cred" {
 
   # Modify if required
   integration_name = "uptycs-int-20220101"
-
 }
 
 output "service-account-email" {
