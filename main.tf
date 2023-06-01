@@ -62,12 +62,33 @@ resource "google_project_iam_member" "bind_viewer" {
 resource "google_service_account_iam_binding" "workload_identity_binding" {
   service_account_id = var.service_account_exists == false ? "${google_service_account.sa_for_cloudquery[0].name}" : "${data.google_service_account.myaccount[0].name}"
   role               = "roles/iam.workloadIdentityUser"
-  members = [for each in var.host_aws_instance_roles : format("principalSet://iam.googleapis.com/projects/%s/locations/global/workloadIdentityPools/%s/attribute.aws_role/arn:aws:sts::%s:assumed-role/%s", data.google_project.my_host_project.number,google_iam_workload_identity_pool.create_wip.workload_identity_pool_id,var.host_aws_account_id, each)]
+  members            = [for each in var.host_aws_instance_roles : format("principalSet://iam.googleapis.com/projects/%s/locations/global/workloadIdentityPools/%s/attribute.aws_role/arn:aws:sts::%s:assumed-role/%s", data.google_project.my_host_project.number, google_iam_workload_identity_pool.create_wip.workload_identity_pool_id, var.host_aws_account_id, each)]
+}
+
+locals {
+  is_windows = substr(pathexpand("~"), 0, 1) == "/" ? false : true
 }
 
 resource "null_resource" "cred_config_json" {
+  count = local.is_windows ? 0 : 1
   provisioner "local-exec" {
     command     = "gcloud iam workload-identity-pools create-cred-config projects/${data.google_project.my_host_project.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.create_wip.workload_identity_pool_id}/providers/${google_iam_workload_identity_pool_provider.add_provider.workload_identity_pool_provider_id} --service-account=${var.service_account_exists == false ? google_service_account.sa_for_cloudquery[0].email : data.google_service_account.myaccount[0].email} --output-file=credentials.json --aws"
     interpreter = ["/bin/sh", "-c"]
+  }
+}
+
+resource "null_resource" "cred_config_json_windows_powershell" {
+  count = local.is_windows && var.windows_interpreter ? 1 : 0
+  provisioner "local-exec" {
+    command = "gcloud iam workload-identity-pools create-cred-config projects/${data.google_project.my_host_project.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.create_wip.workload_identity_pool_id}/providers/${google_iam_workload_identity_pool_provider.add_provider.workload_identity_pool_provider_id} --service-account=${var.service_account_exists == false ? google_service_account.sa_for_cloudquery[0].email : data.google_service_account.myaccount[0].email} --output-file=credentials.json --aws"
+    interpreter = ["C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", "-Command"]
+  }
+}
+
+resource "null_resource" "cred_config_json_windows_cmd" {
+  count = local.is_windows && !var.windows_interpreter ? 1 : 0
+  provisioner "local-exec" {
+    command = "gcloud iam workload-identity-pools create-cred-config projects/${data.google_project.my_host_project.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.create_wip.workload_identity_pool_id}/providers/${google_iam_workload_identity_pool_provider.add_provider.workload_identity_pool_provider_id} --service-account=${var.service_account_exists == false ? google_service_account.sa_for_cloudquery[0].email : data.google_service_account.myaccount[0].email} --output-file=credentials.json --aws"
+    interpreter = ["C:\\Windows\\System32\\cmd.exe", "/C"]
   }
 }
