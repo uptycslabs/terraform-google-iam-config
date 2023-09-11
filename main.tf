@@ -68,7 +68,7 @@ resource "google_service_account_iam_binding" "workload_identity_binding" {
 resource "google_project_iam_custom_role" "role_for_uptycs" {
   role_id     = "roleForUptycs"
   title       = "Role for Uptycs"
-  description = "Custom Role for Uptycs"
+  description = "Uptycs Custom Terraform Role"
   permissions = [
     "serviceusage.services.use", 
     "storage.buckets.get"
