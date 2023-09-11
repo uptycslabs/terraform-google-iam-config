@@ -65,6 +65,25 @@ resource "google_service_account_iam_binding" "workload_identity_binding" {
   members            = [for each in var.host_aws_instance_roles : format("principalSet://iam.googleapis.com/projects/%s/locations/global/workloadIdentityPools/%s/attribute.aws_role/arn:aws:sts::%s:assumed-role/%s", data.google_project.my_host_project.number, google_iam_workload_identity_pool.create_wip.workload_identity_pool_id, var.host_aws_account_id, each)]
 }
 
+resource "google_project_iam_custom_role" "role_for_uptycs" {
+  role_id     = "roleForUptycs"
+  title       = "Role for Uptycs"
+  description = "Custom Role for Uptycs"
+  permissions = [
+    "serviceusage.services.use", 
+    "storage.buckets.get"
+  ]
+  project = var.gcp_project_id
+}
+
+resource "google_project_iam_binding" "bind_role_for_uptycs" {
+  role    = "projects/${var.gcp_project_id}/roles/roleForUptycs"
+  project = var.gcp_project_id
+  members  = [
+    var.service_account_exists == false ? "serviceAccount:${google_service_account.sa_for_cloudquery[0].email}" : "serviceAccount:${data.google_service_account.myaccount[0].email}"
+  ]
+}
+
 resource "null_resource" "cred_config_json" {
   provisioner "local-exec" {
     command     = "gcloud iam workload-identity-pools create-cred-config projects/${data.google_project.my_host_project.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.create_wip.workload_identity_pool_id}/providers/${google_iam_workload_identity_pool_provider.add_provider.workload_identity_pool_provider_id} --service-account=${var.service_account_exists == false ? google_service_account.sa_for_cloudquery[0].email : data.google_service_account.myaccount[0].email} --output-file=credentials.json --aws"

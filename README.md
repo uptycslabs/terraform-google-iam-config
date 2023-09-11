@@ -27,6 +27,7 @@ The following dependencies must be available:
   * Service Account Admin
   * IAM Workload Identity Pool Admin
   * Project IAM Admin
+  * Role Administrator
 
 ## 2. Install terraform
 
