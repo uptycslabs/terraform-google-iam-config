@@ -66,7 +66,7 @@ resource "google_service_account_iam_binding" "workload_identity_binding" {
 }
 
 resource "google_project_iam_custom_role" "role_for_uptycs" {
-  role_id     = "roleForUptycs"
+  role_id     = "${var.integration_name}-role"
   title       = "Role for Uptycs"
   description = "Uptycs Custom Terraform Role"
   permissions = [
