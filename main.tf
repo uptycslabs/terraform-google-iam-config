@@ -66,6 +66,7 @@ resource "google_service_account_iam_binding" "workload_identity_binding" {
 }
 
 resource "null_resource" "cred_config_json" {
+  count = var.skip_local_exec == true ? 0 : 1
   provisioner "local-exec" {
     command     = "gcloud iam workload-identity-pools create-cred-config projects/${data.google_project.my_host_project.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.create_wip.workload_identity_pool_id}/providers/${google_iam_workload_identity_pool_provider.add_provider.workload_identity_pool_provider_id} --service-account=${var.service_account_exists == false ? google_service_account.sa_for_cloudquery[0].email : data.google_service_account.myaccount[0].email} --output-file=credentials.json --aws"
   }

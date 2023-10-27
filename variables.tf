@@ -32,3 +32,9 @@ variable "host_aws_instance_roles" {
   type        = list 
   description = "AWS role names of Uptycs - for identity binding"
 }
+
+variable "skip_local_exec" {
+  type = bool
+  default = false
+  description = "Set this to true to skip executing local commands like gcloud"
+}
