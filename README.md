@@ -63,6 +63,11 @@ module "create-gcp-cred" {
 
   # Modify if required
   integration_name = "uptycs-int-20220101"
+
+  # Set this to skip execution of local commands like "gcloud"
+  # If set to 'true', credential JSON file must be created outside of TF. Uptycs needs the credentials JSON file.
+  # Please refer to the TF output for "gcloud" that can generate the credentials JSON file
+  skip_local_exec = false
 }
 
 output "service-account-email" {
@@ -85,6 +90,7 @@ output "command-to-generate-gcp-cred-config" {
 | host_aws_account_id       | Uptycs's AWS Account ID. Copy from Uptycs's GCP Integration Screen UI          | `string`       | Yes      |                         |
 | host_aws_instance_roles    | AWS role names of Uptycs - for identity binding                                | `list(string)` | Yes      |                         |
 | integration_name          | Unique phrase used to name the resources                                       | `string`       |          | `"uptycs-int-20220101"` |
+| skip_local_exec           | Flag to skip local command execution                                  | `bool`         | false                   |
 
 ## Outputs
 
